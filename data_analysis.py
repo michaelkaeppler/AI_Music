@@ -9,7 +9,10 @@ import multiprocessing
 from functools import partial
 
 class MidiClass:
-    def __init__(self, mt):
+    def __init__(self, path):
+        # read
+        mt = pypianoroll.read(path)
+        
         # basic stats
         self.resolution = int(mt.resolution)
         self.tempo = [int(i) for i in np.unique(mt.tempo)]#[0]
@@ -49,11 +52,10 @@ class MidiClass:
 
 def process_file(input_path, output_path):
     try:
-        mt = pypianoroll.read(input_path)
+        song = MidiClass(input_path)
     except:
         return
 
-    song = MidiClass(mt)
     name = os.path.split(input_path)[-1]
     song_dict = {name: song.__dict__}
 
