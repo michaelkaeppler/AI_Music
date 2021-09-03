@@ -47,9 +47,17 @@ class MidiClass:
         self.silent_middle = int(sum(notes_per_frame[self.silent_start:-self.silent_end] == 0))
         self.notes_in_bin = [int(i) for i in notes.sum(0)]#/notes.sum()
 
-def log_data(path, song_dict):
+def process_file(input_path, output_path):
     try:
-        files = os.listdir(path)
+        song = MidiClass(input_path)
+    except:
+        return
+
+    name = os.path.split(input_path)[-1]
+    song_dict = {name: song.__dict__}
+
+    try:
+        files = os.listdir(output_path)
         numbers = []
         for file in files:
             if file[-4:] == 'json':
@@ -58,7 +66,7 @@ def log_data(path, song_dict):
     except:
         new_num = 0
         
-    with open(os.path.join(path, 'song_'+str(new_num).zfill(6)+'.json'), 'w') as f:
+    with open(os.path.join(output_path, 'song_'+str(new_num).zfill(6)+'.json'), 'w') as f:
         json.dump(song_dict, f)
 
 if __name__ == '__main__':
@@ -72,9 +80,4 @@ if __name__ == '__main__':
     file_names = glob.glob(os.path.join(args.midi_path, '**/*.mid*'), recursive=True)
 
     for file_name in tqdm(file_names):
-        try:
-            song = MidiClass(file_name)
-            name = os.path.split(file_name)[-1]
-            log_data(args.data_path, {name:song.__dict__})
-        except:
-            pass
+        process_file(file_name, args.data_path)
