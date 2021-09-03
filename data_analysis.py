@@ -21,7 +21,6 @@ class MidiClass:
         #else:
         #try:
         self.tempo = [int(i) for i in np.unique(mt.tempo)]#[0]
-        self.sum_tempo = int(np.sum(mt.tempo))
         #except:
         #    self.tempo = -1
         
