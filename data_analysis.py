@@ -5,6 +5,8 @@ import glob
 import os
 from tqdm import tqdm
 import json
+import multiprocessing
+from functools import partial
 
 class MidiClass:
     def __init__(self, path):
@@ -47,6 +49,7 @@ class MidiClass:
         self.silent_middle = int(sum(notes_per_frame[self.silent_start:-self.silent_end] == 0))
         self.notes_in_bin = [int(i) for i in notes.sum(0)]#/notes.sum()
 
+
 def process_file(input_path, output_path):
     try:
         song = MidiClass(input_path)
@@ -71,13 +74,19 @@ def process_file(input_path, output_path):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
+    JOBS = multiprocessing.cpu_count() - 1
     # model args
     parser.add_argument('--midi_path', type = str, default = "midis_cpdl/", help='N')
     parser.add_argument('--data_path', type = str, default = "song_data_cpdl/", help='N')#ethicscommonsense
+    parser.add_argument('--jobs', type=int, default=JOBS, help='N')
 
     args = parser.parse_args()
 
     file_names = glob.glob(os.path.join(args.midi_path, '**/*.mid*'), recursive=True)
+    file_count = len(file_names)
 
-    for file_name in tqdm(file_names):
-        process_file(file_name, args.data_path)
+    print(f'Processing {file_count} files with {args.jobs} processes:')
+    process_f = partial(process_file, output_path=args.data_path)
+    with multiprocessing.Pool(processes=args.jobs) as p:
+        for file in tqdm(p.imap_unordered(process_f, file_names), total=file_count):
+            pass
