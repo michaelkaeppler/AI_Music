@@ -12,18 +12,9 @@ class MidiClass:
         mt = pypianoroll.read(path)
         
         # basic stats
-        #try:
         self.resolution = int(mt.resolution)
-        #except:
-        #    self.resolution = -1
-        #if len(np.unique(mt.tempo)) > 1:
-        #    raise RuntimeError
-        #else:
-        #try:
         self.tempo = [int(i) for i in np.unique(mt.tempo)]#[0]
-        #except:
-        #    self.tempo = -1
-        
+
         # tracks stats
         tracks = mt.tracks
         self.n_tracks = len(tracks)
@@ -79,8 +70,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     file_names = glob.glob(os.path.join(args.midi_path, '**/*.mid*'), recursive=True)
-    #print(len(file_names))
-    #print(1/0)
+
     for file_name in tqdm(file_names):
         try:
             song = MidiClass(file_name)
