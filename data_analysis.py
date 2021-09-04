@@ -49,19 +49,23 @@ class MidiClass:
         self.silent_middle = int(sum(notes_per_frame[self.silent_start:-self.silent_end] == 0))
         self.notes_in_bin = [int(i) for i in notes.sum(0)]#/notes.sum()
 
+def get_last_file_number(path):
+    file_names = glob.glob(os.path.join(path, '*.json'))
+    if file_names:
+        last_file = file_names[-1]
+        number_with_extension = last_file.split('_')[-1]
+        number = number_with_extension.split('.')[0]
+        return int(number)
+    else:
+        return 0
+
+current_file_number = 0
+
 def log_data(path, song_dict):
-    try:
-        files = os.listdir(path)
-        numbers = []
-        for file in files:
-            if file[-4:] == 'json':
-                numbers.append(int(file.split('_')[-1].split('.')[0]))
-        new_num = max(numbers)+1
-    except:
-        new_num = 0
-        
-    with open(os.path.join(path, 'song_'+str(new_num).zfill(6)+'.json'), 'w') as f:
+    global current_file_number
+    with open(os.path.join(path, 'song_'+str(current_file_number).zfill(6)+'.json'), 'w') as f:
         json.dump(song_dict, f)
+    current_file_number += 1
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -74,6 +78,7 @@ if __name__ == '__main__':
     file_names = glob.glob(os.path.join(args.midi_path, '**/*.mid*'), recursive=True)
     #print(len(file_names))
     #print(1/0)
+    current_file_number = get_last_file_number(args.data_path) + 1
     for file_name in tqdm(file_names):
         try:
             song = MidiClass(file_name)
