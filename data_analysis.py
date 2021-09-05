@@ -83,11 +83,11 @@ def process_file(input_path, output_path):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    JOBS = multiprocessing.cpu_count() - 1
+    jobs = multiprocessing.cpu_count() - 1
     # model args
     parser.add_argument('--midi_path', type = str, default = "midis_cpdl/", help='N')
     parser.add_argument('--data_path', type = str, default = "song_data_cpdl/", help='N')#ethicscommonsense
-    parser.add_argument('--jobs', type=int, default=JOBS, help='N')
+    parser.add_argument('--jobs', type=int, default=jobs, help='N')
 
     args = parser.parse_args()
 
