@@ -93,9 +93,12 @@ if __name__ == '__main__':
     file_names = glob.glob(os.path.join(args.midi_path, '**/*.mid*'), recursive=True)
     file_count = len(file_names)
 
-    current_file_number = multiprocessing.Value('i', get_first_new_file_number(args.data_path))
+    first_file_number = get_first_new_file_number(args.data_path)
+    current_file_number = multiprocessing.Value('i', first_file_number)
 
     os.makedirs(args.data_path, exist_ok=True)
+    if first_file_number > 0:
+        print(f'Found data files, start counting with {first_file_number}')
 
     print(f'Processing {file_count} files with {args.jobs} processes:')
     process_f = partial(process_file, output_path=args.data_path)
