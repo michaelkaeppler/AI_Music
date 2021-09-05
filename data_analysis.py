@@ -13,9 +13,6 @@ class MidiClass:
         # read
         mt = pypianoroll.read(path)
 
-        # basic stats
-        self.resolution = int(mt.resolution)
-
         # tracks stats
         tracks = mt.tracks
         self.n_tracks = len(tracks)
@@ -26,7 +23,7 @@ class MidiClass:
         self.len = notes.shape[0]
 
         # Which fraction of a beat does a timestep amount to?
-        beat_fraction = 1 / self.resolution
+        beat_fraction = 1 / mt.resolution
         # How long does a beat last, for every timestep (there may be tempo changes
         # in the middle of the piece)
         beat_duration_seconds = 60 / mt.tempo
