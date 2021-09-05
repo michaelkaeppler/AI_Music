@@ -66,7 +66,8 @@ def init_file_counter(counter):
 def process_file(input_path, output_path):
     try:
         song = MidiClass(input_path)
-    except:
+    except Exception as e:
+        print(f'File {input_path} could not be processed: {str(e)}')
         return
 
     name = os.path.split(input_path)[-1]
