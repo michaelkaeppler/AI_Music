@@ -95,6 +95,8 @@ if __name__ == '__main__':
 
     current_file_number = multiprocessing.Value('i', get_first_new_file_number(args.data_path))
 
+    os.makedirs(args.data_path, exist_ok=True)
+
     print(f'Processing {file_count} files with {args.jobs} processes:')
     process_f = partial(process_file, output_path=args.data_path)
     with multiprocessing.Pool(processes=args.jobs,
