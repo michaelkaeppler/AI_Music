@@ -12,10 +12,9 @@ class MidiClass:
     def __init__(self, path):
         # read
         mt = pypianoroll.read(path)
-        
+
         # basic stats
         self.resolution = int(mt.resolution)
-        self.tempo = [int(i) for i in np.unique(mt.tempo)]#[0]
 
         # tracks stats
         tracks = mt.tracks
@@ -33,7 +32,9 @@ class MidiClass:
         beat_duration_seconds = 60 / mt.tempo
         # Total duration in seconds
         self.total_duration = int(np.sum(beat_duration_seconds * beat_fraction))
-
+        # Average tempo in bpm
+        beats_total = int(self.len * beat_fraction)
+        self.tempo = int(beats_total / (self.total_duration / 60))
 
         for track in tracks:
             self.programs.append(track.program)
