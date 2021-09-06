@@ -8,6 +8,7 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     # model args
     parser.add_argument('--data_path', type = str, default = "song_data_maestro/", help='N')#ethicscommonsense
+    parser.add_argument('destfile', type=str, default = "combined_data.json", help='N')
 
     args = parser.parse_args()
 
@@ -19,5 +20,5 @@ if __name__ == '__main__':
         with open(file_name) as f:
             song_data = json.load(f)
         all_data.update(song_data)
-    with open('all_data_maestro.json', 'w') as f:
+    with open(args.destfile, 'w') as f:
         json.dump(all_data, f)
