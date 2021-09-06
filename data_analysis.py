@@ -72,12 +72,13 @@ def process_file(input_path, output_path):
     song_dict = {name: song.__dict__}
 
     global current_file_number
-
     with current_file_number.get_lock():
-        with open(os.path.join(output_path, 'song_'+str(current_file_number.value).zfill(6)+'.json'), 'w') as f:
-            json.dump(song_dict, f)
-
+        output_file = os.path.join(output_path, 'song_'+str(current_file_number.value).zfill(6)+'.json')
         current_file_number.value += 1
+
+    with open(output_file, 'w') as f:
+        json.dump(song_dict, f)
+
 
 if __name__ == '__main__':
     parser = ArgumentParser()
