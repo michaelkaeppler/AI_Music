@@ -105,5 +105,8 @@ if __name__ == '__main__':
     with multiprocessing.Pool(processes=args.jobs,
                               initializer=init_file_counter,
                               initargs=(current_file_number,)) as p:
-        for file in tqdm(p.imap_unordered(process_f, file_names), total=file_count):
+        for file in tqdm(p.imap_unordered(process_f, file_names),
+                         total=file_count,
+                         miniters=1,
+                         smoothing=0):
             pass
